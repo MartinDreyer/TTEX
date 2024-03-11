@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('microsoft/', include('microsoft_auth.urls', namespace='microsoft', )),
     path("", include("core.urls")),
-
+    path("upload/", include("upload.urls")),
 ]
