@@ -29,7 +29,7 @@ def start_background_job(request):
     if not audio_file:
         return HttpResponse(content="No file found!", status=400)
     else:
-        transcribe.delay(file_path, username=str(request.user.get_username()))
+        transcribe.delay(file_path, username=(str(request.user.get_username())))
         return redirect('succes')
     
 @login_required(redirect_field_name='')

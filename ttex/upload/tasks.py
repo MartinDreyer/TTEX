@@ -6,7 +6,8 @@ import os
 from pathlib import Path
 from .models import Transcription
 from django.contrib.auth.models import User
-
+from django.core.mail import send_mail
+from ttex import settings
 
 @shared_task
 def transcribe(file_path, username):
@@ -21,7 +22,7 @@ def transcribe(file_path, username):
         None
     """
     # Load the Whisper model
-    model = whisper.load_model("base")
+    model = whisper.load_model("large", device="cpu")
 
     # Extract the file name from the file path and build the full path to the audio file
     file_name = file_path.split('\\')[-1]
@@ -31,7 +32,7 @@ def transcribe(file_path, username):
     srt_path = prepare_srt_path(audio_path)
 
     # Perform the transcription
-    result = model.transcribe(f"file:{audio_path}")
+    result = model.transcribe(f"file:{audio_path}", verbose=False)
 
     # Write the transcription result to an SRT file
     write_transcription_to_srt(srt_path, result)
@@ -78,6 +79,16 @@ def write_transcription_to_srt(srt_path, result):
     except Exception as e:
         print(f"An error occurred while writing the transcription to the SRT file: {e}")
 
+def notify_user(user_email, host):
+        send_mail(
+        subject = "TTEX",
+        message="Din transskription er klar til download.",
+        from_email=host,
+        recipient_list=[user_email],
+        fail_silently=False,
+    )
+
+
 def save_transcription(srt_path, user, audio_path):
     """
     Saves the transcription to the database and cleans up temporary files.
@@ -100,6 +111,10 @@ def save_transcription(srt_path, user, audio_path):
             )
 
         # Send an email to the user to notify them that the transcription is ready
+        try:
+            notify_user(user.email, settings.EMAIL_HOST_USER)
+        except Exception as e:
+            print(f"An error occurred while sending the notification email: {e}")
 
         # Optionally save if you've modified the transcription instance further, otherwise this is not needed
         # transcription.save()
@@ -111,4 +126,3 @@ def save_transcription(srt_path, user, audio_path):
         print(f"An error occurred while saving the transcription: {e}")
         os.remove(audio_path)
         os.remove(srt_path)
-
