@@ -81,6 +81,9 @@ TEMPLATES = [
     },
 ]
 
+
+# Authentication
+
 AUTHENTICATION_BACKENDS = [
     'microsoft_auth.backends.MicrosoftAuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend' 
@@ -91,6 +94,8 @@ LOGIN_REDIRECT_URL = '/admin/'
 
 # Redirect URL after logout
 LOGOUT_REDIRECT_URL = '/'
+
+LOGIN_URL = '/'
 
 MICROSOFT_AUTH_CLIENT_ID = os.environ.get('MICROSOFT_AUTH_CLIENT_ID')
 MICROSOFT_AUTH_CLIENT_SECRET = os.environ.get('MICROSOFT_AUTH_CLIENT_SECRET')
@@ -137,7 +142,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Copenhagen'
 
 USE_I18N = True
 
@@ -156,3 +161,12 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# GMAIL EMAIL SETTINGS
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.environ.get('EMAIL_HOST')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = True
+EMAIL_PORT = 465
