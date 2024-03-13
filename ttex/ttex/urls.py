@@ -23,3 +23,7 @@ urlpatterns = [
     path("", include("core.urls")),
     path("upload/", include("upload.urls")),
 ]
+
+admin.site.site_header = "TTEX Administration"
+admin.site.site_title = "TTEX Admin Portal"
+admin.site.index_title = "Velkommen til TTEX"

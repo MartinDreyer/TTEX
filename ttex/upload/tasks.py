@@ -3,11 +3,14 @@ from celery import shared_task
 import whisper
 from whisper.utils import WriteSRT
 import os 
+import json
 from pathlib import Path
 from .models import Transcription
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
 from ttex import settings
+import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 @shared_task
 def transcribe(file_path, username):
@@ -22,7 +25,7 @@ def transcribe(file_path, username):
         None
     """
     # Load the Whisper model
-    model = whisper.load_model("large", device="cpu")
+    model = whisper.load_model("base", device="cpu")
 
     # Extract the file name from the file path and build the full path to the audio file
     file_name = file_path.split('\\')[-1]
@@ -79,14 +82,26 @@ def write_transcription_to_srt(srt_path, result):
     except Exception as e:
         print(f"An error occurred while writing the transcription to the SRT file: {e}")
 
-def notify_user(user_email, host):
-        send_mail(
-        subject = "TTEX",
-        message="Din transskription er klar til download.",
-        from_email=host,
-        recipient_list=[user_email],
-        fail_silently=False,
-    )
+def notify_user(user_email):
+    url = settings.N8N_WEBHOOK_URL
+    print(url)
+    data = {
+        "email": user_email
+        # Create link to the transcription
+        # and add it to the data dictionary
+    }
+    try:
+        session = requests.Session()
+        retry = Retry(connect=3, backoff_factor=0.5)
+        adapter = HTTPAdapter(max_retries=retry)
+        session.mount('http://', adapter)
+        session.mount('https://', adapter)
+
+        session.post(url, json=data)       
+
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred while sending the notification: {e}")
+
 
 
 def save_transcription(srt_path, user, audio_path):
@@ -112,7 +127,7 @@ def save_transcription(srt_path, user, audio_path):
 
         # Send an email to the user to notify them that the transcription is ready
         try:
-            notify_user(user.email, settings.EMAIL_HOST_USER)
+            notify_user(user.email)
         except Exception as e:
             print(f"An error occurred while sending the notification email: {e}")
 

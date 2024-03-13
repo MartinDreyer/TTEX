@@ -11,7 +11,7 @@
         {% csrf_token %}
         <div class="mb-4">
             <label for="audio_file" class="block text-gray-700 text-sm font-bold mb-2">Upload lydfil:</label>
-            <div class="relative border-dashed  min-w-xl border-2 border-gray-400 bg-white rounded-md py-4 text-center">
+            <div class="relative w-[70vw] h-[50vh] border-dashed border-2 border-gray-400 flex flex-col items-center justify-center bg-white rounded-md py-4 text-center ">
                 <input type="file" id="audio_file" name="audio_file" class=" absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer" onchange="displayFileName()">
                 <div class="flex flex-col items-center justify-center">
                     <svg class="w-12 h-12 text-gray-400 mb-2 min-w-2xl" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
