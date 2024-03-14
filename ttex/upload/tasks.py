@@ -3,14 +3,12 @@ from celery import shared_task
 import whisper
 from whisper.utils import WriteSRT
 import os 
-import json
 from pathlib import Path
 from .models import Transcription
 from django.contrib.auth.models import User
 from ttex import settings
 import requests
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
+import uuid
 
 @shared_task
 def transcribe(file_path, username):
@@ -82,22 +80,18 @@ def write_transcription_to_srt(srt_path, result):
     except Exception as e:
         print(f"An error occurred while writing the transcription to the SRT file: {e}")
 
-def notify_user(user_email):
-    url = settings.N8N_WEBHOOK_URL
-    print(url)
+def notify_user(user_email, link):
+    url = settings.N8N_WEBHOOK_TESTURL
     data = {
-        "email": user_email
-        # Create link to the transcription
-        # and add it to the data dictionary
+        "email": user_email,
+        "link": link
     }
     try:
-        session = requests.Session()
-        retry = Retry(connect=3, backoff_factor=0.5)
-        adapter = HTTPAdapter(max_retries=retry)
-        session.mount('http://', adapter)
-        session.mount('https://', adapter)
-
-        session.post(url, json=data)       
+        res = requests.post(url, json=data)
+        if res.status_code != 200:
+            print(f"An error occurred while sending the notification: {res.text}")
+        else:
+            print("Notification sent successfully")
 
     except requests.exceptions.RequestException as e:
         print(f"An error occurred while sending the notification: {e}")
@@ -119,15 +113,18 @@ def save_transcription(srt_path, user, audio_path):
     try:
         with open(srt_path, "r") as f:
             srt_content = f.read()
+            id = uuid.uuid4()
             transcription = Transcription.objects.create(
+                id=id,
                 title=srt_path.stem,
                 text=srt_content,
                 user=user
             )
 
+            link = Transcription.objects.get(id=id).get_absolute_url()
         # Send an email to the user to notify them that the transcription is ready
         try:
-            notify_user(user.email)
+            notify_user(user.email, link)
         except Exception as e:
             print(f"An error occurred while sending the notification email: {e}")
 

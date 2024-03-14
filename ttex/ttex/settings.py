@@ -33,6 +33,7 @@ ALLOWED_HOSTS = ['localhost', ]
 
 INSTALLED_APPS = [
     'upload.apps.UploadConfig',
+    'transcriptions.apps.TranscriptionsConfig',
     'core.apps.CoreConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -176,3 +177,4 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 
 N8N_WEBHOOK_URL = os.environ.get('N8N_WEBHOOK_URL')
+N8N_WEBHOOK_TESTURL = os.environ.get('N8N_WEBHOOK_TESTURL')

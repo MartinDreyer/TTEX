@@ -22,6 +22,7 @@ urlpatterns = [
     path('microsoft/', include('microsoft_auth.urls', namespace='microsoft', )),
     path("", include("core.urls")),
     path("upload/", include("upload.urls")),
+    path("transcriptions/", include("transcriptions.urls"))
 ]
 
 admin.site.site_header = "TTEX Administration"
