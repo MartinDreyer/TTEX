@@ -1,5 +1,30 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-<h1>{{ transcription.title }}</h1>
-<p> {{ transcription.text }}</p>
+<div class="w-full text-left p-4 "> &lt; <a href="{% url 'transcriptions' %}">Tilbage </a></div>
+<div class="w-full flex justify-end">
+    <div class="flex  space-x-4 mb-8">
+        <form action="{% url 'edit' transcription.id %}" method="GET">
+            {% csrf_token %}
+            <button type="submit" class="bg-slate-200 hover:bg-slate-300 py-2 px-4 rounded mt-4">Redigér</button>
+        </form>
+        <form action="{% url 'delete_transcription' transcription.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded mt-4">Slet</button>
+        </form>
+    </div>
+</div>
+<div class="w-full flex justify-center bg-slate-50 p-16 rounded mb-16 rounded ">
+    <div>
+        <div>
+        
+            <h1 class=" mb-16 mt-8 text-4xl font-bold">{{ transcription.title }}</h1>
+        </div>
+        <div class="text-left bg-slate-100 p-16 rounded">
+            <p> {{ transcription.text|linebreaksbr }}</p>
+        </div>
+
+        
+    </div>
+</div>
 {% endblock %}

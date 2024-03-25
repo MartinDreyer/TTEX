@@ -1,8 +1,16 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
-  <h1>Transcriptions</h1>
-  <ul>
-    {% for transcription in transcriptions %}
-      <li><a href="{% url 'detail' transcription.id %}">{{ transcription.title }}</a></li>
-    {% endfor %}
+  <h1 class="text-4xl font-bold mb-16 mt-8">Mine transskriberinger</h1>
+  <div class="flex flex-col w-full items-center">
+    <ul class="grid grid-cols-1 gap-y-4 max-w-xs m-8">
+      {% for transcription in transcriptions %}
+      <a href="{% url 'detail' transcription.id %}" class="hover:text-slate-600">
+        <div class="min-w-64 bg-slate-200 p-2 rounded hover:bg-slate-300">
+          <li>{{ transcription.title }}</li>
+        </div>
+      </a>
+      {% endfor %}
+    </ul>
+  </div>
 {% endblock %}

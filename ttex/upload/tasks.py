@@ -81,10 +81,10 @@ def write_transcription_to_srt(srt_path, result):
         print(f"An error occurred while writing the transcription to the SRT file: {e}")
 
 def notify_user(user_email, link):
-    url = settings.N8N_WEBHOOK_TESTURL
+    url = os.environ.get("NOTIFICATION_URL")
     data = {
         "email": user_email,
-        "link": link
+        "link": link,
     }
     try:
         res = requests.post(url, json=data)

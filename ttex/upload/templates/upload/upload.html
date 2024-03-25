@@ -10,7 +10,7 @@
     <form action="{% url 'transcribe' %}" method="post" enctype="multipart/form-data" class="mt-8">
         {% csrf_token %}
         <div class="mb-4">
-            <label for="audio_file" class="block text-gray-700 text-sm font-bold mb-2">Upload lydfil:</label>
+            <label for="audio_file" class="block text-4xl mb-16 font-bold">Upload lydfil:</label>
             <div class="relative w-[70vw] h-[50vh] border-dashed border-2 border-gray-400 flex flex-col items-center justify-center bg-white rounded-md py-4 text-center ">
                 <input type="file" id="audio_file" name="audio_file" class=" absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer" onchange="displayFileName()">
                 <div class="flex flex-col items-center justify-center">

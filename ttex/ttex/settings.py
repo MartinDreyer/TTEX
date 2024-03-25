@@ -98,7 +98,7 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_REDIRECT_URL = '/admin/'
 
 # Redirect URL after logout
-LOGOUT_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/upload/'
 
 LOGIN_URL = '/'
 
@@ -161,6 +161,9 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+CKEDITOR_BASEPATH = "/staticfiles/ckeditor/ckeditor/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

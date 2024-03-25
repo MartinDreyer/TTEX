@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,7 +25,7 @@ urlpatterns = [
     path("", include("core.urls")),
     path("upload/", include("upload.urls")),
     path("transcriptions/", include("transcriptions.urls"))
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 admin.site.site_header = "TTEX Administration"
 admin.site.site_title = "TTEX Admin Portal"
