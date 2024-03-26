@@ -7,9 +7,20 @@
       {% for transcription in transcriptions %}
       <div class="flex space-x-4 items-center">
         <a href="{% url 'detail' transcription.id %}" class="hover:text-slate-600">
-          <div class="min-w-64 bg-slate-200 p-2 rounded hover:bg-slate-300">
+          <div class="min-w-80 bg-slate-200 p-4 rounded hover:bg-slate-300 text-left relative">
             <li>{{ transcription.title }}</li>
             <li class="text-xs text-slate-600">Oprettet {{ transcription.created_at }}</li>
+            {% if transcription.status == 'COMPLETE' %}
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 absolute right-5 top-5" viewBox="0 0 20 20" fill="currentColor">
+                <circle cx="10" cy="10" r="9" fill="none" stroke="currentColor" stroke-width="2" />
+                <path d="M6 10l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            {% endif %}
+            {% if transcription.status == 'PENDING' %}
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-yellow-500 absolute right-5 top-5 rotate-45" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M 1,10 A 9,9 0 0 1 19,10" fill="none" stroke="currentColor" stroke-width="2" />
+            </svg>                   
+            {% endif %}
           </div>
         </a>
         <a href="{% url 'download_transcription' transcription.id %}" class="ml-2">

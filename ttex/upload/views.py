@@ -36,7 +36,8 @@ def start_background_job(request):
             return redirect('upload')
         else:
             audio_file, file_path = _save_audio_file(request)
-            transcribe.delay(file_path, username=(str(request.user.get_username())))
+            max_line_width = request.POST.get('format')
+            transcribe.delay(file_path, username=(str(request.user.get_username())), max_line_width=int(max_line_width))
             return redirect('success')
     except Exception as e:
         print(f"An error occurred while starting the background job: {e}")
