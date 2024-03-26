@@ -21,12 +21,17 @@ source .venv/Scripts/activate
 ```
 cd ttex/ && pip install -r requirements.txt
 ```
+4. **Export environment variables**
+```
+export MYENV=value
+```
 
-4. **Run development server**
+5. **Run development server**
 
 ```
 python manage.py runserver 0.0.0.0:8000
 ```
+
 
 ### Backend
 
