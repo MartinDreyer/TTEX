@@ -33,6 +33,16 @@ function displayFileName() {
     fileNameElement.textContent = fileName;
 
     const uploadInfo = document.getElementById("upload-info");
+    const uploadIcon = document.getElementById("upload-icon");
     uploadInfo.style.display = "none";
+    uploadIcon.style.display = "none";
+  }
+}
+
+function checkAudioFile(event) {
+  const fileInput = document.getElementById("audio_file");
+  if (!fileInput.files.length) {
+    alert("Vælg en fil først.");
+    event.preventDefault();
   }
 }

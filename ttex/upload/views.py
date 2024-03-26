@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.core.files.storage import default_storage
 from .tasks import transcribe
 import os
+from django.urls import reverse
 
 # Create your views here.
 
@@ -32,7 +33,7 @@ def start_background_job(request):
     try:
             
         if 'audio_file' not in request.FILES:
-            return HttpResponse(content="No file found!", status=400)
+            return redirect('upload')
         else:
             audio_file, file_path = _save_audio_file(request)
             transcribe.delay(file_path, username=(str(request.user.get_username())))

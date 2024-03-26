@@ -19,3 +19,17 @@ p {
     box-sizing: border-box;
     overflow-wrap: break-word; 
     }
+
+
+#file_name {
+    font-size: 2rem;
+    padding: 5px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 720px) {
+    #file_name {
+        font-size: 1.5rem;
+        line-height: 1.5
+    }
+}

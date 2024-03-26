@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
 from upload.models import Transcription
 from .forms import TranscriptionForm
 from django.contrib.auth.decorators import login_required
@@ -46,5 +47,10 @@ def edit(request, id):
 
     return render(request, 'transcriptions/edit.html', {'form': form})
     
-
-
+@login_required(redirect_field_name='')
+def download_transcription(request, id):
+    transcription = Transcription.objects.get(id=id)
+    response = HttpResponse(transcription.text, content_type='application/text charset=utf-8')
+    response['Content-Disposition'] = f'attachment; filename="{transcription.title}.srt"'
+    return response
+    
