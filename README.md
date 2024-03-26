@@ -33,6 +33,9 @@ export MYENV=value
 python manage.py runserver 0.0.0.0:8000
 ```
 
+7. **Login**
+Go to localhost:8000/admin and type in your login info
+
 
 ### Backend
 
