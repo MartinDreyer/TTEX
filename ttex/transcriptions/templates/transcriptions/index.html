@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <h1 class="text-4xl font-bold mb-16 mt-8">Mine transskriberinger</h1>
+  <div class="flex flex-col w-full items-center">
+    <ul class="grid grid-cols-1 gap-y-4 max-w-xs m-8">
+      {% for transcription in transcriptions %}
+      <div class="flex space-x-4 items-center">
+        <a href="{% url 'detail' transcription.id %}" class="hover:text-slate-600">
+          <div class="min-w-64 bg-slate-200 p-2 rounded hover:bg-slate-300">
+            <li>{{ transcription.title }}</li>
+            <li class="text-xs text-slate-600">Oprettet {{ transcription.created_at }}</li>
+          </div>
+        </a>
+        <a href="{% url 'download_transcription' transcription.id %}" class="ml-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500 hover:text-gray-700" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 0 1 1 1v4.586l1.293-1.293a1 1 0 0 1 1.414 1.414l-3 3a1 1 0 0 1-1.414 0l-3-3a1 1 0 0 1 1.414-1.414L9 8.586V4a1 1 0 0 1 1-1zm-8 9a1 1 0 0 1 1-1h14a1 1 0 0 1 0 2H3a1 1 0 0 1-1-1zm1 3a1 1 0 0 1 1-1h10a1 1 0 0 1 0 2H4a1 1 0 0 1-1-1z" clip-rule="evenodd" />
+          </svg>
+        </a>
+      </div>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}

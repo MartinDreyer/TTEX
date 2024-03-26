@@ -1,0 +1,35 @@
+a:hover {
+    color: #999 ;
+
+}
+
+p {
+    font-size: 16px;
+}
+
+#id_title {
+    font-size: 48px;
+    padding: 5px;
+    margin-bottom: 20px;
+}
+#id_text {
+    width: 100%;
+    padding: 20px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    overflow-wrap: break-word; 
+    }
+
+
+#file_name {
+    font-size: 2rem;
+    padding: 5px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 720px) {
+    #file_name {
+        font-size: 1.5rem;
+        line-height: 1.5
+    }
+}

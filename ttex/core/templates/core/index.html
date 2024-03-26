@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="flex flex-col justify-center items-center w-full h-[20vh]">    
+</div>
+
+{% endif %}
+{% if not user.is_authenticated %}
+<div class="w-full h-screen flex flex-col justify-center items-center">
+    <div class="flex flex-col justify-around items-center bg-slate-200 p-8 shadow rounded h-[50vh]">
+        <div>
+            <h1 class="text-4xl font-bold m-8">Velkommen til TTEX</h1>
+            <p class="text-slate-800">TV 2 Fyns værktøj til transskribering.</p>
+        </div>
+        <a href="/microsoft/to-auth-redirect/?next=/upload/" >
+            <div class="rounded bg-slate-500 text-white p-2 max-w-xs hover:bg-slate-400 duration-500 hover:cursor-pointer w-[20vw] shadow">
+                Log ind
+            </div>
+        </a>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
