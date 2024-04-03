@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'microsoft_auth',
+    'tailwind',
+    'theme',
+    'django_browser_reload'
+
 ]
 
 SITE_ID = 1
@@ -55,6 +59,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
+
 ]
 
 ROOT_URLCONF = 'ttex.urls'
@@ -181,3 +187,10 @@ EMAIL_PORT = 587
 
 N8N_WEBHOOK_URL = os.environ.get('N8N_WEBHOOK_URL')
 N8N_WEBHOOK_TESTURL = os.environ.get('N8N_WEBHOOK_TESTURL')
+
+
+TAILWIND_APP_NAME = 'theme'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]

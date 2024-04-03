@@ -24,7 +24,9 @@ urlpatterns = [
     path('microsoft/', include('microsoft_auth.urls', namespace='microsoft', )),
     path("", include("core.urls"),),
     path("upload/", include("upload.urls")),
-    path("transcriptions/", include("transcriptions.urls"))
+    path("transcriptions/", include("transcriptions.urls")),
+    path("__reload__/", include("django_browser_reload.urls")),
+
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 admin.site.site_header = "TTEX Administration"

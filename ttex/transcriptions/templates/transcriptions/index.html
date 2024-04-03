@@ -5,9 +5,9 @@
   <div class="flex flex-col w-full items-center">
     <ul class="grid grid-cols-1 gap-y-4 max-w-xs m-8">
       {% for transcription in transcriptions %}
-        <li class="flex space-x-4 items-center">
+        <li class="flex space-x-4 items-center bg-white hover:bg-slate-300 rounded">
           <a href="{% url 'detail' transcription.id %}" class="flex-1">
-            <div class="min-w-80 p-4 bg-white hover:bg-[#F5DD89] rounded text-left relative">
+            <div class="min-w-80 p-4 rounded text-left relative">
               <div class="font-bold">{{ transcription.title }}</div>
               <div class="text-xs text-slate-600">Oprettet {{ transcription.created_at }}</div>
               {% if transcription.status == 'COMPLETE' %}
