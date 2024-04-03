@@ -16,20 +16,22 @@
     <link href="https://cdn.tailwindcss.com" rel="stylesheet">  
 
 </head>
-<body>
+<body class="bg-[#FFE6D7]">
     {% if user.is_authenticated %}
-    <header>
+    <header class="bg-[#640014] text-white">
         <div class="flex justify-end">
+            <div class="mr-auto ml-4 flex flex-col justify-center">
+                <img src="{% static 'images/TV2Fyn_White_Rgb.png' %}" alt="TTEX logo" class="h-[50px]"/>
+            </div>
             <ul class="flex space-x-4 m-8">
                 <li><a href="{% url 'upload' %}">Upload</a></li>
                 <li><a href="{% url 'transcriptions' %}">Transskriberinger</a></li>
                 <li> <form id="logout-form" method="post" action="/admin/logout/">
                     {% csrf_token %}
-                    <button class="hover:text-slate-400" type="submit">Log ud</button>
+                    <button class="hover:text-[#EB8C82]" type="submit">Log ud</button>
                 </form></li>
             </ul>
         </div>
-        <hr class="hr"/>
     </header>
     {% endif %}
     

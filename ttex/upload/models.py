@@ -16,5 +16,4 @@ class Transcription(models.Model):
         return self.title
     
     def get_absolute_url(self):
-        return f"http://192.168.87.69:8000/transcriptions/{self.id}"
-    
+        return f"http://localhost:8000/transcriptions/{self.id}"

@@ -34,10 +34,8 @@ def edit(request, id):
     transcription = get_object_or_404(Transcription, id=id)
     if request.method == "POST":
         form = TranscriptionForm(request.POST, instance=transcription)
-        print("Form Validity:", form.is_valid())  # Debugging
         if form.is_valid():
             form.save()
-            print("Form saved")  # Debugging
 
             return redirect('detail', id=transcription.id)
     else:

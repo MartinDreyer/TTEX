@@ -96,6 +96,9 @@ def write_transcription_to_srt(srt_path, result, max_line_width):
 
 def notify_user(user_email):
     url = os.environ.get("NOTIFICATION_URL")
+    headers = {
+        
+    }
     data = {
         "email": user_email,
     }
