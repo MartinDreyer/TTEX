@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TTEX</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.png' %}">
     {% tailwind_css %}
 
 </head>
@@ -30,6 +31,7 @@
             </ul>
         </div>
     </header>
+    <div class="p-4 w-full text-right">Logget ind som {{ user }}</div>
     {% endif %}
     
     <div class="container mt-4 flex flex-col justify-center text-center">

@@ -2,9 +2,9 @@
 {% load static %}
 
 {% block content %}
-<div class="flex flex-col justify-center w-full items-center">
+<div class="flex flex-col justify-center w-full items-center h-[50vh]">
     <h1 class="mb-4">Succes!</h1>
-    <p class="text-gray-600 mb-4">Din fil bliver nu transskriberet. Du modtager en mail, når dine undertekster er klar</p>
+    <p class="text-gray-600 mb-4">Din fil bliver nu transskriberet. Du modtager en mail, når dine undertekster er klar. <br>Du kan sagtens sætte flere lydfiler i kø på én gang.</p>
 
     <a href="{% url 'upload' %}" class="bg-[#F0281E] text-white py-2 px-4 hover:bg-[#EB8C82] rounded">Upload flere filer</a>
 </div>

@@ -9,6 +9,8 @@ from django.contrib.auth.models import User
 from ttex import settings
 import requests
 import uuid
+from requests_oauthlib import OAuth2Session
+from oauthlib.oauth2 import BackendApplicationClient
 
 @shared_task
 def transcribe(file_path, username, max_line_width=42):
@@ -94,17 +96,33 @@ def write_transcription_to_srt(srt_path, result, max_line_width):
     except Exception as e:
             print(f"An error occurred while writing the transcription to the SRT file: {e}")
 
-def notify_user(user_email):
+def notify_user(user_email, transcription_title):
     url = os.environ.get("NOTIFICATION_URL")
+    tenant_id = os.environ.get("MICROSOFT_AUTH_TENANT_ID")
+    client_id = os.environ.get("MICROSOFT_AUTH_CLIENT_ID")
+    client_secret = os.environ.get("MICROSOFT_AUTH_CLIENT_SECRET")
+    token_url = f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token"
+    
+    client = BackendApplicationClient(client_id=client_id)
+    oauth = OAuth2Session(client=client)
+    token = oauth.fetch_token(token_url=token_url, 
+                      client_id=client_id, 
+                      client_secret=client_secret,
+                      scope=["https://service.flow.microsoft.com//.default"],
+                      )
+    
+    access_token = token["access_token"]
+
     headers = {
-        
+        'Authorization': f'Bearer {access_token}',
     }
     data = {
         "email": user_email,
+        "message": f"Din transskribering af {transcription_title} er klar!"
     }
     try:
-        res = requests.post(url, json=data)
-        if res.status_code != 200:
+        res = requests.post(url, json=data, headers=headers)
+        if res.status_code != 202:
             print(f"An error occurred while sending the notification: {res.text}")
         else:
             print("Notification sent successfully")
@@ -161,13 +179,12 @@ def save_transcription(srt_path, user, audio_path, id):
 
             transcription = Transcription.objects.get(id=id)
             transcription.text = srt_content
-            transcription.text = srt_content
             transcription.status = "COMPLETE"
             transcription.save()
 
         # Send an email to the user to notify them that the transcription is ready
         try:
-            notify_user(user.email)
+            notify_user(user.email, transcription.title)
         except Exception as e:
             print(f"An error occurred while sending the notification email: {e}")
 

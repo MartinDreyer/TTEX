@@ -5,7 +5,7 @@
   <div class="flex flex-col w-full items-center">
     <ul class="grid grid-cols-1 gap-y-4 max-w-xs m-8">
       {% for transcription in transcriptions %}
-        <li class="flex space-x-4 items-center bg-white hover:bg-slate-300 rounded">
+        <li class="flex space-x-4 items-center bg-white hover:bg-slate-300 rounded duration-500">
           <a href="{% url 'detail' transcription.id %}" class="flex-1">
             <div class="min-w-80 p-4 rounded text-left relative">
               <div class="font-bold">{{ transcription.title }}</div>
