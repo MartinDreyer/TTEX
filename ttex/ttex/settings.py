@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from .utils import get_secret
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -109,9 +110,9 @@ LOGOUT_REDIRECT_URL = '/upload/'
 
 LOGIN_URL = '/'
 
-MICROSOFT_AUTH_CLIENT_ID = os.environ.get('MICROSOFT_AUTH_CLIENT_ID')
-MICROSOFT_AUTH_CLIENT_SECRET = os.environ.get('MICROSOFT_AUTH_CLIENT_SECRET')
-MICROSOFT_AUTH_TENANT_ID = os.environ.get('MICROSOFT_AUTH_TENANT_ID')
+MICROSOFT_AUTH_CLIENT_ID = get_secret('MICROSOFT_AUTH_CLIENT_ID')
+MICROSOFT_AUTH_CLIENT_SECRET = get_secret('MICROSOFT_AUTH_CLIENT_SECRET')
+MICROSOFT_AUTH_TENANT_ID = get_secret('MICROSOFT_AUTH_TENANT_ID')
 
 
 MICROSOFT_AUTH_LOGIN_TYPE = 'ma'

@@ -4,6 +4,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,31 +15,36 @@
     {% tailwind_css %}
 
 </head>
+
 <body class="bg-[#FFE6D7]">
     {% if user.is_authenticated %}
     <header class="bg-[#640014] text-white">
         <div class="flex justify-end">
             <div class="mr-auto ml-4 flex flex-col justify-center">
-                <img src="{% static 'images/TV2Fyn_White_Rgb.png' %}" alt="TTEX logo" class="h-[50px]"/>
+                <img src="{% static 'images/TV2Fyn_White_Rgb.png' %}" alt="TTEX logo" class="h-[50px]" />
             </div>
             <ul class="flex space-x-4 m-8">
                 <li class="hover:text-[#EB8C82]"><a href="{% url 'upload' %}">Upload</a></li>
                 <li class="hover:text-[#EB8C82]"><a href="{% url 'transcriptions' %}">Transskriberinger</a></li>
-                <li > <form id="logout-form" method="post" action="/admin/logout/">
-                    {% csrf_token %}
-                    <button class="hover:text-[#EB8C82]" type="submit">Log ud</button>
-                </form></li>
+                <li>
+                    <form id="logout-form" method="post" action="/admin/logout/">
+                        {% csrf_token %}
+                        <button class="hover:text-[#EB8C82]" type="submit">Log ud</button>
+                    </form>
+                </li>
             </ul>
         </div>
     </header>
-    <div class="p-4 w-full text-right">Logget ind som {{ user }}</div>
+    <div class="p-8 w-full text-right">Logget ind som <b>{{ user }}</b></div>
+
     {% endif %}
-    
-    <div class="container mt-4 flex flex-col justify-center text-center">
+
+    <div class="mt-4 flex flex-col justify-center text-center w-screen p-8">
         {% block content %}
         {% endblock %}
 
     </div>
-    
+
 </body>
+
 </html>
