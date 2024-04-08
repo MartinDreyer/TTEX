@@ -1,7 +1,31 @@
-web:
-  build: .
-  command:  python manage.py runserver 0.0.0.0:8000
-  volumes:
-    - .:/code
-  ports:
-    - "8000:8000"
+services:
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    networks:
+      - app-network
+
+  celery:
+    build: .
+    command: celery -A ttex worker -l INFO
+    volumes:
+      - .:/code
+    networks:
+      - app-network
+    depends_on:
+      - redis
+
+  redis:
+    image: 'redis:alpine'
+    command: redis-server
+    restart: always
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

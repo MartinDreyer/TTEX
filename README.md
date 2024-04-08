@@ -2,45 +2,12 @@
 
 ## Local development
 
-### Frontend
-
-1. **Create venv**
+1. 
 ```
-python -m venv .venv
+docker build .
 ```
 
-2. **Activate .venv**
+2.
 ```
-source .venv/Scripts/activate
-```
-
-3. **Install requirements**
-```
-cd ttex/ && pip install -r requirements.txt
-```
-4. **Create user**
-```
-python manage.py createsuperuser
-```
-
-5. **Export environment variables**
-```
-export MYENV=value
-```
-
-6. **Run development server**
-```
-python manage.py runserver 0.0.0.0:8000
-```
-
-
-### Backend
-
-**Start celery worker**
-
-```
-redis-server
-
-// navigate to ttex/
-celery -A ttex worker -l INFO
+docker compose up
 ```
