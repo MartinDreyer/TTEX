@@ -7,3 +7,4 @@ Celery
 django-microsoft-auth
 django-tailwind
 django-tailwind[reload]
+djangorestframework

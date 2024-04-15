@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'microsoft_auth',
     'django_browser_reload',
     'tailwind',
-    'theme'
+    'theme',
+    'rest_framework',
 
 ]
 
@@ -103,10 +104,10 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Redirect URL for successful authentication
-LOGIN_REDIRECT_URL = '/admin/'
+LOGIN_REDIRECT_URL = '/'
 
 # Redirect URL after logout
-LOGOUT_REDIRECT_URL = '/upload/'
+LOGOUT_REDIRECT_URL = '/'
 
 LOGIN_URL = '/'
 

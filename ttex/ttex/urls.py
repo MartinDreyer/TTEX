@@ -19,6 +19,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('microsoft/', include('microsoft_auth.urls', namespace='microsoft', )),
@@ -26,6 +27,7 @@ urlpatterns = [
     path("upload/", include("upload.urls")),
     path("transcriptions/", include("transcriptions.urls")),
     path("__reload__/", include("django_browser_reload.urls")),
+
 
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

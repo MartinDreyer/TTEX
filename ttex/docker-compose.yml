@@ -24,6 +24,7 @@ services:
 
   celery:
     build: .
+    user: "deployer"
     command: celery -A ttex worker -l INFO
     volumes:
       - .:/code
@@ -57,12 +58,12 @@ networks:
 
 secrets:
   microsoft_auth_client_id:
-    file: ./.secrets/.microsoft_auth/microsoft_auth_client_id.txt
+    file: ../.secrets/.microsoft_auth/microsoft_auth_client_id.txt
   microsoft_auth_client_secret:
-    file: ./.secrets/.microsoft_auth/microsoft_auth_client_secret.txt
+    file: ../.secrets/.microsoft_auth/microsoft_auth_client_secret.txt
   microsoft_auth_tenant_id:
-    file: ./.secrets/.microsoft_auth/microsoft_auth_tenant_id.txt
+    file: ../.secrets/.microsoft_auth/microsoft_auth_tenant_id.txt
   microsoft_auth_object_id:
-    file: ./.secrets/.microsoft_auth/microsoft_auth_object_id.txt
+    file: ../.secrets/.microsoft_auth/microsoft_auth_object_id.txt
   notification_url:
-    file: ./.secrets/notify/notification_url.txt
+    file: ../.secrets/notify/notification_url.txt

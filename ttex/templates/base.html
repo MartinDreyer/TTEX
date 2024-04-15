@@ -27,7 +27,7 @@
                 <li class="hover:text-[#EB8C82]"><a href="{% url 'upload' %}">Upload</a></li>
                 <li class="hover:text-[#EB8C82]"><a href="{% url 'transcriptions' %}">Transskriberinger</a></li>
                 <li>
-                    <form id="logout-form" method="post" action="/admin/logout/">
+                    <form id="logout-form" method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
                         <button class="hover:text-[#EB8C82]" type="submit">Log ud</button>
                     </form>
@@ -42,7 +42,6 @@
     <div class="mt-4 flex flex-col justify-center text-center w-screen p-8">
         {% block content %}
         {% endblock %}
-
     </div>
 
 </body>

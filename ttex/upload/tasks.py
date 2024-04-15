@@ -43,7 +43,7 @@ def transcribe(file_path, username, max_line_width=42):
     transcription.save()
 
     # Load the Whisper model
-    model = whisper.load_model("large",)
+    model = whisper.load_model("large-v3",)
 
     # Extract the file name from the file path and build the full path to the audio file
     file_name = file_path.split('\\')[-1]
@@ -56,11 +56,13 @@ def transcribe(file_path, username, max_line_width=42):
     result = model.transcribe(
         f"file:{audio_path}", verbose=False, word_timestamps=True)
 
-    # Write the transcription result to an SRT file
-    write_transcription_to_srt(srt_path, result, max_line_width=max_line_width)
 
-    # Save the transcription to the database
-    save_transcription(srt_path, user, audio_path, id)
+aws
+# Write the transcription result to an SRT file
+write_transcription_to_srt(srt_path, result, max_line_width=max_line_width)
+
+# Save the transcription to the database
+save_transcription(srt_path, user, audio_path, id)
 
 
 def prepare_srt_path(audio_path):
@@ -117,7 +119,8 @@ def notify_user(user_email, transcription_title):
     tenant_id = get_secret("MICROSOFT_AUTH_TENANT_ID")
     client_id = get_secret("MICROSOFT_AUTH_CLIENT_ID")
     client_secret = get_secret("MICROSOFT_AUTH_CLIENT_SECRET")
-    token_url = f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token"
+    token_url = f"https://login.microsoftonline.com/{
+        tenant_id}/oauth2/v2.0/token"
 
     client = BackendApplicationClient(client_id=client_id)
     oauth = OAuth2Session(client=client)
@@ -161,38 +164,9 @@ def save_transcription(srt_path, user, audio_path, id):
     Returns:
         None
     """
-
-    def add_hyphens(srt_content):
-        lines = srt_content.split('\n')  # Split the content into lines
-        modified_lines = []
-
-        for i, line in enumerate(lines):
-            # Check if the line starts with an alphabetic character
-            if line and line[0].isalpha():
-                # Add '- ' to the end of the line if it doesn't end with a period
-                if not line.endswith('.'):
-                    line += ' -'
-
-                modified_lines.append(line)
-            else:
-                modified_lines.append(line)
-
-        for i in range(1, len(modified_lines)):
-            # Add '- ' to the start of the line if it starts with a lowercase letter
-            # Ensure the line starts with an alphabetic character
-            if modified_lines[i] and modified_lines[i][0].isalpha() and modified_lines[i][0].islower():
-                modified_lines[i] = '- ' + modified_lines[i]
-            else:
-                modified_lines[i] = modified_lines[i]
-
-        # Join the lines back into a single string
-        modified_content = '\n'.join(modified_lines)
-        return modified_content
-
     try:
         with open(srt_path, "r") as f:
             srt_content = f.read()
-            srt_content = add_hyphens(srt_content)
 
             transcription = Transcription.objects.get(id=id)
             transcription.text = srt_content

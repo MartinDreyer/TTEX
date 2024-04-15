@@ -5,4 +5,7 @@ WORKDIR /code
 COPY requirements.txt /code/
 RUN apt-get update && apt-get install -y ffmpeg
 RUN pip install -r requirements.txt
+RUN adduser --disabled-password deployer
+RUN chown -R deployer:deployer /code
+USER deployer
 COPY . /code/
