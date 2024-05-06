@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from .utils import get_secret
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +27,7 @@ SECRET_KEY = 'django-insecure-8wu215fxx%#@)mnid$0y-k@!s5_bfdkaky=%z4em+&zgf$gs2x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', ]
+ALLOWED_HOSTS = ['*', ]
 
 
 # Application definition
@@ -43,6 +44,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'microsoft_auth',
+    'django_browser_reload',
+    'tailwind',
+    'theme',
+
 ]
 
 SITE_ID = 1
@@ -55,11 +60,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
+
+
 ]
 
 ROOT_URLCONF = 'ttex.urls'
 # CELERY SETTINGS
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = 'redis://redis:6379/0'
 CELERY_ACCEPT_CONTENT = {'application/json'}
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
@@ -91,14 +99,14 @@ TEMPLATES = [
 
 AUTHENTICATION_BACKENDS = [
     'microsoft_auth.backends.MicrosoftAuthenticationBackend',
-    'django.contrib.auth.backends.ModelBackend' 
-    ]
+    'django.contrib.auth.backends.ModelBackend'
+]
 
 # Redirect URL for successful authentication
-LOGIN_REDIRECT_URL = '/admin/'
+LOGIN_REDIRECT_URL = '/'
 
 # Redirect URL after logout
-LOGOUT_REDIRECT_URL = '/upload/'
+LOGOUT_REDIRECT_URL = '/'
 
 LOGIN_URL = '/'
 
@@ -163,7 +171,15 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-CKEDITOR_BASEPATH = "/staticfiles/ckeditor/ckeditor/"
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -171,13 +187,8 @@ CKEDITOR_BASEPATH = "/staticfiles/ckeditor/ckeditor/"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# GMAIL EMAIL SETTINGS
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.environ.get('EMAIL_HOST')
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
+TAILWIND_APP_NAME = 'theme'
 
-N8N_WEBHOOK_URL = os.environ.get('N8N_WEBHOOK_URL')
-N8N_WEBHOOK_TESTURL = os.environ.get('N8N_WEBHOOK_TESTURL')
+INTERNAL_IPS = [
+    "127.0.0.1",
+]

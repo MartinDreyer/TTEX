@@ -1,43 +1,49 @@
 {% load static %}
+{% load static tailwind_tags %}
 
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TTEX</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>  
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link href="https://cdn.tailwindcss.com" rel="stylesheet">  
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.png' %}">
+    {% tailwind_css %}
 
 </head>
-<body>
+
+<body class="bg-[#FFE6D7]">
     {% if user.is_authenticated %}
-    <header>
+    <header class="bg-[#640014] text-white">
         <div class="flex justify-end">
+            <div class="mr-auto ml-4 flex flex-col justify-center">
+                <img src="{% static 'images/TV2Fyn_White_Rgb.png' %}" alt="TTEX logo" class="h-[50px]" />
+            </div>
             <ul class="flex space-x-4 m-8">
-                <li><a href="{% url 'upload' %}">Upload</a></li>
-                <li><a href="{% url 'transcriptions' %}">Transskriberinger</a></li>
-                <li> <form id="logout-form" method="post" action="/admin/logout/">
-                    {% csrf_token %}
-                    <button type="submit">Log ud</button>
-                </form></li>
+                <li class="hover:text-[#EB8C82]"><a href="{% url 'upload' %}">Upload</a></li>
+                <li class="hover:text-[#EB8C82]"><a href="{% url 'transcriptions' %}">Transskriberinger</a></li>
+                <li>
+                    <form id="logout-form" method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="hover:text-[#EB8C82]" type="submit">Log ud</button>
+                    </form>
+                </li>
             </ul>
         </div>
-        <hr class="hr"/>
     </header>
+    <div class="p-8 w-full text-right">Logget ind som <b>{{ user }}</b></div>
+
     {% endif %}
-    
-    <div class="container mt-4 flex flex-col justify-center text-center">
+
+    <div class="mt-4 flex flex-col justify-center text-center w-screen p-8">
         {% block content %}
         {% endblock %}
-
     </div>
-    
+
 </body>
+
 </html>
