@@ -15,6 +15,9 @@ from ttex.utils import get_secret
 from requests.models import PreparedRequest  # For URL validation
 
 
+MODEL_SIZE = os.environ.get("MODEL_SIZE", "small")
+
+
 @shared_task
 def transcribe(file_path, username, max_line_width=42):
     """
@@ -43,7 +46,7 @@ def transcribe(file_path, username, max_line_width=42):
     transcription.save()
 
     # Load the Whisper model
-    model = whisper.load_model("large-v3",)
+    model = whisper.load_model(MODEL_SIZE)
 
     # Extract the file name from the file path and build the full path to the audio file
     file_name = file_path.split('\\')[-1]
@@ -56,13 +59,11 @@ def transcribe(file_path, username, max_line_width=42):
     result = model.transcribe(
         f"file:{audio_path}", verbose=False, word_timestamps=True)
 
+    # Write the transcription result to an SRT file
+    write_transcription_to_srt(srt_path, result, max_line_width=max_line_width)
 
-aws
-# Write the transcription result to an SRT file
-write_transcription_to_srt(srt_path, result, max_line_width=max_line_width)
-
-# Save the transcription to the database
-save_transcription(srt_path, user, audio_path, id)
+    # Save the transcription to the database
+    save_transcription(srt_path, user, audio_path, id)
 
 
 def prepare_srt_path(audio_path):
@@ -119,8 +120,9 @@ def notify_user(user_email, transcription_title):
     tenant_id = get_secret("MICROSOFT_AUTH_TENANT_ID")
     client_id = get_secret("MICROSOFT_AUTH_CLIENT_ID")
     client_secret = get_secret("MICROSOFT_AUTH_CLIENT_SECRET")
-    token_url = f"https://login.microsoftonline.com/{
-        tenant_id}/oauth2/v2.0/token"
+    # fmt: off
+    token_url = f'https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token'
+    # fmt: on
 
     client = BackendApplicationClient(client_id=client_id)
     oauth = OAuth2Session(client=client)

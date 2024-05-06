@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-8wu215fxx%#@)mnid$0y-k@!s5_bfdkaky=%z4em+&zgf$gs2x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', ]
+ALLOWED_HOSTS = ['*', ]
 
 
 # Application definition
@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'django_browser_reload',
     'tailwind',
     'theme',
-    'rest_framework',
 
 ]
 
@@ -111,9 +110,9 @@ LOGOUT_REDIRECT_URL = '/'
 
 LOGIN_URL = '/'
 
-MICROSOFT_AUTH_CLIENT_ID = get_secret('MICROSOFT_AUTH_CLIENT_ID')
-MICROSOFT_AUTH_CLIENT_SECRET = get_secret('MICROSOFT_AUTH_CLIENT_SECRET')
-MICROSOFT_AUTH_TENANT_ID = get_secret('MICROSOFT_AUTH_TENANT_ID')
+MICROSOFT_AUTH_CLIENT_ID = os.environ.get('MICROSOFT_AUTH_CLIENT_ID')
+MICROSOFT_AUTH_CLIENT_SECRET = os.environ.get('MICROSOFT_AUTH_CLIENT_SECRET')
+MICROSOFT_AUTH_TENANT_ID = os.environ.get('MICROSOFT_AUTH_TENANT_ID')
 
 
 MICROSOFT_AUTH_LOGIN_TYPE = 'ma'

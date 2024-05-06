@@ -1,0 +1,8 @@
+.env
+docker-compose.yml
+deploy-ttex.yaml
+.gitignore
+Dockerfile.web
+Dockerfile.celery
+noter.MD
+.git
