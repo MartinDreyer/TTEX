@@ -30,7 +30,7 @@ COPY . /code/
 WORKDIR /code/ttex
 
 # Set deployer as the owner of the /code directory
-RUN chown -R deployer:deployer /code
+RUN chown -R deployer:deployer /code/*
 
 # Set deployer as the user to run the application
 USER deployer

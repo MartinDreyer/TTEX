@@ -6,3 +6,4 @@ Dockerfile.web
 Dockerfile.celery
 noter.MD
 .git
+node_modules/

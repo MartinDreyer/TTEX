@@ -1,26 +1,39 @@
 services:
   web:
-    image: 'mcd295/ttex'
-    command: [ "python", "manage.py", "runserver", "0.0.0.0:80" ]
+    build: .
+    command: [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]
     volumes:
       - .:/code
     ports:
-      - "80:80"
+      - "8000:8000"
+    depends_on:
+      - db
     networks:
-      - app-network
+      - ttex-network
   celery:
-    image: 'mcd295/ttex'
-    command: [ "celery", "-A", "ttex", "worker", "-l", "INFO" ]
+    build: .
+    command: [ "celery", "-A", "ttex", "worker", "-l", "info" ]
     volumes:
       - .:/code
+    depends_on:
+      - db
     networks:
-      - app-network
+      - ttex-network
+  db:
+    image: postgres:16.2
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=
+      - POSTGRES_USER=
+      - POSTGRES_PASSWORD=
+      - POSTGRES_NAME=
+    networks:
+      - ttex-network
   redis:
-    image: 'redis:alpine'
-    command: redis-server
-    restart: always
+    image: redis:alpine
     networks:
-      - app-network
+      - ttex-network
 networks:
-  app-network:
+  ttex-network:
     driver: bridge
