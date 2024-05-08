@@ -17,9 +17,9 @@ services:
       - db
     networks:
       - ttex-network
-  celery:
+celery:
     build: .
-    command: [ "celery", "-A", "ttex", "worker", "-l", "info" ]
+    command: [ "celery", "-A", "ttex", "worker", "-l", "info", "-E", "--max-tasks-per-child=1", "--max-memory-per-child=100000"]     
     env_file:
       - .env
     environment:
@@ -28,6 +28,7 @@ services:
       - MICROSOFT_AUTH_TENANT_ID=${MICROSOFT_AUTH_TENANT_ID}
       - MICROSOFT_AUTH_OBJECT_ID=${MICROSOFT_AUTH_OBJECT_ID}
       - NOTIFICATION_URL=${NOTIFICATION_URL}
+      - MODEL_SIZE=${MODEL_SIZE}
     volumes:
       - .:/code
     depends_on:
@@ -37,7 +38,7 @@ services:
   db:
     image: postgres:16.2
     volumes:
-      - ./postgres:/var/lib/postgresql/data
+       - ./postgres:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
