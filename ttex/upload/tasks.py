@@ -15,8 +15,9 @@ from ttex.utils import get_secret
 from requests.models import PreparedRequest  # For URL validation
 
 
-MODEL_SIZE = os.environ.get("MODEL_SIZE", "small")
-
+MODEL_NAME = os.environ.get("MODEL_NAME", "small")
+MODEL_ROOT = os.environ.get("MODEL_ROOT", "./")
+DEVICE = os.environ.get("DEVICE", "cpu")
 
 @shared_task
 def transcribe(file_path, username, max_line_width=42):
@@ -46,8 +47,7 @@ def transcribe(file_path, username, max_line_width=42):
     transcription.save()
 
     # Load the Whisper model
-    model = whisper.load_model(MODEL_SIZE)
-
+    model = whisper.load_model(MODEL_NAME, device=DEVICE, download_root=MODEL_ROOT )
     # Extract the file name from the file path and build the full path to the audio file
     file_name = file_path.split('\\')[-1]
     audio_path = os.path.join(os.getcwd(), 'temp', 'audio', file_name)
@@ -108,7 +108,7 @@ def write_transcription_to_srt(srt_path, result, max_line_width):
 
 
 def notify_user(user_email, transcription_title):
-    url = get_secret("NOTIFICATION_URL")
+    url = os.environ.get("NOTIFICATION_URL")
     try:
         req = PreparedRequest()
         req.prepare_url(url, None)
@@ -117,9 +117,9 @@ def notify_user(user_email, transcription_title):
     except Exception as e:
         print(f"Invalid URL: {e}")
         return
-    tenant_id = get_secret("MICROSOFT_AUTH_TENANT_ID")
-    client_id = get_secret("MICROSOFT_AUTH_CLIENT_ID")
-    client_secret = get_secret("MICROSOFT_AUTH_CLIENT_SECRET")
+    tenant_id = os.environ.get("MICROSOFT_AUTH_TENANT_ID")
+    client_id = os.environ.get("MICROSOFT_AUTH_CLIENT_ID")
+    client_secret = os.environ.get("MICROSOFT_AUTH_CLIENT_SECRET")
     # fmt: off
     token_url = f'https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token'
     # fmt: on
