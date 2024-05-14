@@ -1,0 +1,15 @@
+[Unit]
+Description=Celery Worker
+After=network.target
+
+[Service]
+User=myuser
+Group=mygroup
+EnvironmentFile=/path/to/my/.env
+WorkingDirectory=/path/to/my/TTEX/app
+ExecStart=/path/to/my/venv/bin/celery -A ttex worker -l INFO --concurrency 2
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+

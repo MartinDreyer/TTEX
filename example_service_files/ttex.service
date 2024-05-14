@@ -1,0 +1,14 @@
+[Unit]
+Description=Gunicorn instance TTEX
+After=network.target
+
+[Service]
+User=myuser
+Group=mygroup
+WorkingDirectory=/path/to/my/TTEX/app
+EnvironmentFile=/path/to/my/.env
+ExecStart=/path/to/venv/bin/gunicorn ttex.wsgi
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

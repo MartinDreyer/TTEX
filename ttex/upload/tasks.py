@@ -16,6 +16,8 @@ from requests.models import PreparedRequest  # For URL validation
 
 
 MODEL_SIZE = os.environ.get("MODEL_SIZE", "small")
+DEVICE = os.environ.get("DEVICE", "cpu")
+DOWNLOAD_ROOT = os.environ.get("DOWNLOAD_ROOT")
 
 
 @shared_task
@@ -41,12 +43,13 @@ def transcribe(file_path, username, max_line_width=42):
         title=Path(file_path).stem,
         user=user,
         status="PENDING",
-        text="Transskribering undervejs ..."
+               text="Transskribering undervejs ..."
     )
     transcription.save()
 
     # Load the Whisper model
-    model = whisper.load_model(MODEL_SIZE)
+    model = whisper.load_model(
+        MODEL_SIZE, device=DEVICE, download_root=DOWNLOAD_ROOT)
 
     # Extract the file name from the file path and build the full path to the audio file
     file_name = file_path.split('\\')[-1]
@@ -56,9 +59,12 @@ def transcribe(file_path, username, max_line_width=42):
     srt_path = prepare_srt_path(audio_path)
 
     # Perform the transcription
-    result = model.transcribe(
-        f"file:{audio_path}", verbose=False, word_timestamps=True)
+    try:
 
+        result = model.transcribe(
+            f"file:{audio_path}", verbose=False, word_timestamps=True)
+    except Exception as e:
+        print(f"An error occurred while transcribing the audio file: {e}")
     # Write the transcription result to an SRT file
     write_transcription_to_srt(srt_path, result, max_line_width=max_line_width)
 

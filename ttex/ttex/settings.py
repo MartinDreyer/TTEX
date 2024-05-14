@@ -10,27 +10,29 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
+from dotenv import load_dotenv
 from pathlib import Path
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-from dotenv import load_dotenv
 env_path = load_dotenv(os.path.join(BASE_DIR, '.env'))
 load_dotenv(env_path)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-8wu215fxx%#@)mnid$0y-k@!s5_bfdkaky=%z4em+&zgf$gs2x')
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY', 'django-insecure-8wu215fxx%#@)mnid$0y-k@!s5_bfdkaky=%z4em+&zgf$gs2x')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
 DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["https://ttex.tv2fyn.local/",
+                 "ttex.tv2fyn.local", "192.168.159.10"]
 
 
 # Application definition
@@ -47,7 +49,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'microsoft_auth',
-    'django_browser_reload',
     'tailwind',
     'theme',
 
@@ -64,14 +65,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_browser_reload.middleware.BrowserReloadMiddleware',
 
 
 ]
 
 ROOT_URLCONF = 'ttex.urls'
 # CELERY SETTINGS
-CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = {'application/json'}
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
@@ -130,10 +130,11 @@ WSGI_APPLICATION = 'ttex.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
+        'NAME': os.environ.get('POSTGRES_NAME'),
+        'USER': os.environ.get('POSTGRES_USER'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+        'HOST': 'localhost',
         'PORT': 5432
     }
 }
@@ -203,4 +204,9 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-NPM_BIN_PATH = "/usr/local/bin/npm"
+NPM_BIN_PATH = '/home/administrator/.nvm/versions/node/v20.13.0/bin/npm'
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+USE_X_FORWARDED_HOST = True
+USE_X_FORWARDED_PORT = True
+SECURE_SSL_REDIRECT = False
