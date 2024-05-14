@@ -61,14 +61,6 @@ Collect static files for Django:
 python3 manage.py collectstatic
 ```
 
-## Docker Container
-
-Start the services using Docker:
-
-```bash
-docker compose up
-```
-
 ## Database Migrations and Superuser Creation
 
 Once the Docker containers are running, execute the following commands inside the Docker container:
