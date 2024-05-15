@@ -6,7 +6,7 @@ Follow these steps to set up the project environment and get everything running.
 
 ## Prerequisites
 
-Ensure you have Python and Node.js and Docker installed on your system.
+Ensure you have Python and Node.js on your system
 
 ## Repository Cloning
 
