@@ -63,7 +63,7 @@ python3 manage.py collectstatic
 
 ## Database Migrations and Superuser Creation
 
-Once the Docker containers are running, execute the following commands inside the Docker container:
+Migrate to make sure your database is up to date, and then create a new superuser
 
 ```bash
 python3 manage.py migrate
