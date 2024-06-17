@@ -13,8 +13,8 @@ Ensure you have Python and Node.js on your system
 First, clone the repository to your local machine:
 
 ```bash
-git clone https://github.com/MartinDreyer/ttex_django.git
-cd ttex_django
+git clone https://github.com/MartinDreyer/TTEX.git
+cd TTEX
 ```
 
 ## Environment Setup
