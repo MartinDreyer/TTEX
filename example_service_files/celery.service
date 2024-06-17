@@ -1,15 +1,15 @@
+sudo systemctl start redis
 [Unit]
 Description=Celery Worker
 After=network.target
 
 [Service]
-User=myuser
-Group=mygroup
-EnvironmentFile=/path/to/my/.env
-WorkingDirectory=/path/to/my/TTEX/app
-ExecStart=/path/to/my/venv/bin/celery -A ttex worker -l INFO --concurrency 2
+User=deployer
+Group=www-data
+EnvironmentFile=/home/administrator/ttex_django/.env
+WorkingDirectory=/home/administrator/ttex_django/ttex
+ExecStart=/home/administrator/ttex_django/.venv/bin/celery -A ttex worker -l INFO --concurrency 2
 Restart=always
 
 [Install]
 WantedBy=multi-user.target
-
