@@ -1,12 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load socialaccount %}
+
 
 {% block content %}
 {% if user.is_authenticated %}
 <div class="flex flex-col justify-center items-center w-full h-[20vh]">
 </div>
-
 {% endif %}
+
 {% if not user.is_authenticated %}
 <div class="w-full h-screen flex flex-col justify-center items-center">
     <div class="flex flex-col justify-around items-center p-8 shadow rounded h-[40vh] bg-[#640014] text-white">
@@ -15,12 +17,15 @@
             <h1 class="text-4xl font-bold m-8">Velkommen til TTEX</h1>
             <p>TV 2 Fyns værktøj til transskribering.</p>
         </div>
-        <a href="/microsoft/to-auth-redirect/?next=/upload/">
-            <div
+        <form method="post" action="{% url 'microsoft_login' %}">
+            {% csrf_token %}
+            <button type="submit"
                 class="rounded bg-[#F0281E] text-white p-2 max-w-xs hover:bg-[#EB8C82] duration-500 hover:cursor-pointer w-[20vw] shadow">
                 Log ind
-            </div>
+            </button>
+        </form>
         </a>
     </div>
 </div>
 {% endif %}
+{% endblock%}

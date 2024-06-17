@@ -50,9 +50,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'microsoft_auth',
     'tailwind',
     'theme',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.microsoft',
+
 
 ]
 
@@ -67,6 +71,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
+
 
 
 ]
@@ -93,7 +99,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'microsoft_auth.context_processors.microsoft',
+
 
             ],
         },
@@ -104,13 +110,32 @@ TEMPLATES = [
 # Authentication
 
 AUTHENTICATION_BACKENDS = [
-    'microsoft_auth.backends.MicrosoftAuthenticationBackend',
-    'django.contrib.auth.backends.ModelBackend'
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+
 ]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'microsoft': {
+        'client_id': os.environ.get('MICROSOFT_AUTH_CLIENT_ID'),
+        'secret': os.environ.get('MICROSOFT_AUTH_CLIENT_SECRET'),
+        'settings': {
+            'tenant': 'organizations',
+        },
+        'SCOPE': ['User.Read'],
+        'AUTH_PARAMS': {
+            'prompt': 'none',
+        },
+        'INIT_PARAMS': {
+            'prompt': 'none',
+        },
+        'callback_url': 'http://localhost:8000',
+    }
+
+}
 
 # Redirect URL for successful authentication
 LOGIN_REDIRECT_URL = '/'
-
 # Redirect URL after logout
 LOGOUT_REDIRECT_URL = '/'
 
@@ -129,25 +154,18 @@ WSGI_APPLICATION = 'ttex.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-if os.environ.get('DJANGO_ENV') == 'production':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('POSTGRES_NAME'),
-            'USER': os.environ.get('POSTGRES_USER'),
-            'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-            'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
-            'HOST': 'localhost',
-            'PORT': 5432
-        }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'password',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": "db.sqlite3",
-        }
-    }
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -219,3 +237,6 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 USE_X_FORWARDED_PORT = True
 SECURE_SSL_REDIRECT = False
+
+
+NPM_BIN_PATH = '/mnt/c/Program Files/nodejs/npm'

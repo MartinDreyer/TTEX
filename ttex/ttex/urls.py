@@ -22,7 +22,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('microsoft/', include('microsoft_auth.urls', namespace='microsoft', )),
+    path('accounts/', include('allauth.urls')),
     path("", include("core.urls"),),
     path("upload/", include("upload.urls")),
     path("transcriptions/", include("transcriptions.urls")),
