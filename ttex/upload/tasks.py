@@ -13,6 +13,8 @@ from requests_oauthlib import OAuth2Session
 from oauthlib.oauth2 import BackendApplicationClient
 from ttex.utils import get_secret
 from requests.models import PreparedRequest  # For URL validation
+import logging
+logger = logging.getLogger(__name__)
 
 
 MODEL_SIZE = os.environ.get("MODEL_SIZE", "small")
@@ -22,6 +24,8 @@ DOWNLOAD_ROOT = os.environ.get("DOWNLOAD_ROOT")
 
 @shared_task
 def transcribe(file_path, username, max_line_width=42):
+    logger.info(
+        f"Starting transcription for file ID: {file_path} and user: {username}")
     """
     Transcribe an audio file to SRT format using Whisper and save the transcription.
 
@@ -46,30 +50,41 @@ def transcribe(file_path, username, max_line_width=42):
                text="Transskribering undervejs ..."
     )
     transcription.save()
+    print(f"Created pending transcription for user {username}")
+    print(f"Transcribing {file_path} for user {username}")
 
     # Load the Whisper model
     model = whisper.load_model(
         MODEL_SIZE, device=DEVICE, download_root=DOWNLOAD_ROOT)
 
+    print(f"Model loaded: {model}")
+
     # Extract the file name from the file path and build the full path to the audio file
     file_name = file_path.split('\\')[-1]
     audio_path = os.path.join(os.getcwd(), 'temp', 'audio', file_name)
+    print(f"Audio path: {audio_path}")
 
     # Prepare the output path for the SRT file
     srt_path = prepare_srt_path(audio_path)
+    print(f"SRT path: {srt_path}")
 
     # Perform the transcription
     try:
-
         result = model.transcribe(
             f"file:{audio_path}", verbose=False, word_timestamps=True)
     except Exception as e:
         print(f"An error occurred while transcribing the audio file: {e}")
-    # Write the transcription result to an SRT file
-    write_transcription_to_srt(srt_path, result, max_line_width=max_line_width)
 
-    # Save the transcription to the database
-    save_transcription(srt_path, user, audio_path, id)
+    print(f"Transcription result: {result}")
+    # Write the transcription result to an SRT file
+    if result and srt_path:
+        write_transcription_to_srt(
+            srt_path, result, max_line_width=max_line_width)
+
+        # Save the transcription to the database
+        save_transcription(srt_path, user, audio_path, id)
+        logger.info(
+            f"Completed transcription for file path: {file_path} and user: {username}")
 
 
 def prepare_srt_path(audio_path):

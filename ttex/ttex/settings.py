@@ -17,8 +17,9 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-env_path = load_dotenv(os.path.join(BASE_DIR, '.env'))
-load_dotenv(env_path)
+# Load the .env file explicitly
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -31,7 +32,8 @@ else:
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = False
-DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
+
+DEBUG = os.environ.get('DJANGO_DEBUG', 'False')
 
 ALLOWED_HOSTS = ["ttex.tv2fyn.local",
                  "192.168.159.10", "127.0.0.1", "localhost"]
@@ -213,7 +215,10 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-NPM_BIN_PATH = '/home/administrator/.nvm/versions/node/v20.13.0/bin/npm'
+if os.environ.get('DJANGO_ENV') == 'production':
+    NPM_BIN_PATH = '/home/administrator/.nvm/versions/node/v20.13.0/bin/npm'
+else:
+    NPM_BIN_PATH = '/home/madr/.nvm/versions/node/v23.4.0/bin/npm'
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True

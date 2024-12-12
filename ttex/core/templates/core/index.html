@@ -5,7 +5,6 @@
 {% if user.is_authenticated %}
 <div class="flex flex-col justify-center items-center w-full h-[20vh]">
 </div>
-
 {% endif %}
 {% if not user.is_authenticated %}
 <div class="w-full h-screen flex flex-col justify-center items-center">
@@ -24,3 +23,4 @@
     </div>
 </div>
 {% endif %}
+{% endblock %}

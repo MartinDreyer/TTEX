@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 def index(request):
     transcriptions = Transcription.objects.filter(user=request.user).order_by("-created_at") 
     context = {
+        'title': f"{request.user}s transkriberinger",
         'transcriptions': transcriptions
     }
     return render(request, 'transcriptions/index.html', context)
@@ -17,6 +18,7 @@ def index(request):
 def all(request):
     transcriptions = Transcription.objects.all().order_by("-created_at")
     context = {
+        'title': 'Alle transkriberinger',
         'transcriptions':transcriptions
     }
     return render (request, 'transcriptions/index.html', context)
