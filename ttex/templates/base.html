@@ -25,7 +25,8 @@
             </div>
             <ul class="flex space-x-4 m-8">
                 <li class="hover:text-[#EB8C82]"><a href="{% url 'upload' %}">Upload</a></li>
-                <li class="hover:text-[#EB8C82]"><a href="{% url 'transcriptions' %}">Transskriberinger</a></li>
+                <li class="hover:text-[#EB8C82]"><a href="{% url 'transcriptions' %}">Mine transskriberinger</a></li>
+		<li class="hover:text-[#EB8C82]"><a href="{% url 'all' %}">Alle transskriberinger</a></li>
                 <li>
                     <form id="logout-form" method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
@@ -35,9 +36,9 @@
             </ul>
         </div>
     </header>
-    <div class="p-8 w-full text-right">Logget ind som <b>{{ user }}</b></div>
+   <div class="p-8 w-full text-right">Logget ind som <b>{{ user }}</b></div>
 
-    {% endif %}
+    {% endif %} 
 
     <div class="mt-4 flex flex-col justify-center text-center w-screen p-8">
         {% block content %}

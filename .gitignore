@@ -166,3 +166,4 @@ dump.rdb
 .secrets/
 node_modules/
 postgres/
+models/

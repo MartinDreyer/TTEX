@@ -12,10 +12,18 @@ import uuid
 from requests_oauthlib import OAuth2Session
 from oauthlib.oauth2 import BackendApplicationClient
 from ttex.utils import get_secret
+from celery.utils.log import get_task_logger
+import traceback
 from requests.models import PreparedRequest  # For URL validation
 
 
+logger = get_task_logger(__name__)
+
+
+
 MODEL_SIZE = os.environ.get("MODEL_SIZE", "small")
+DEVICE = os.environ.get("DEVICE", "cpu")
+DOWNLOAD_ROOT = os.environ.get("DOWNLOAD_ROOT")
 
 
 @shared_task
@@ -46,7 +54,7 @@ def transcribe(file_path, username, max_line_width=42):
     transcription.save()
 
     # Load the Whisper model
-    model = whisper.load_model(MODEL_SIZE)
+    model = whisper.load_model(MODEL_SIZE, device=DEVICE, download_root=DOWNLOAD_ROOT)
 
     # Extract the file name from the file path and build the full path to the audio file
     file_name = file_path.split('\\')[-1]
@@ -55,10 +63,12 @@ def transcribe(file_path, username, max_line_width=42):
     # Prepare the output path for the SRT file
     srt_path = prepare_srt_path(audio_path)
 
-    # Perform the transcription
-    result = model.transcribe(
-        f"file:{audio_path}", verbose=False, word_timestamps=True)
+    try:
 
+        result = model.transcribe(
+            f"file:{audio_path}", verbose=False, word_timestamps=True)
+    except Exception as e:
+        print(f"An error occurred while transcribing the audio file: {e}")   
     # Write the transcription result to an SRT file
     write_transcription_to_srt(srt_path, result, max_line_width=max_line_width)
 
@@ -166,6 +176,8 @@ def save_transcription(srt_path, user, audio_path, id):
     Returns:
         None
     """
+    logger.info(f"Saving result for {user}")
+
     try:
         with open(srt_path, "r") as f:
             srt_content = f.read()

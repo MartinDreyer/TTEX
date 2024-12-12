@@ -8,11 +8,18 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 @login_required(redirect_field_name='')
 def index(request):
-    transcriptions = Transcription.objects.all()
+    transcriptions = Transcription.objects.filter(user=request.user).order_by("-created_at")
     context = {
         'transcriptions': transcriptions
     }
     return render(request, 'transcriptions/index.html', context)
+
+def all(request):
+    transcriptions = Transcription.objects.all().order_by("-created_at")
+    context = {
+        'transcriptions':transcriptions
+    }
+    return render (request, 'transcriptions/index.html', context)
 
 @login_required(redirect_field_name='')
 def detail(request, id):
@@ -45,7 +52,7 @@ def edit(request, id):
 
     return render(request, 'transcriptions/edit.html', {'form': form})
     
-@login_required(redirect_field_name='')
+#@login_required(redirect_field_name='')
 def download_transcription(request, id):
     transcription = Transcription.objects.get(id=id)
     response = HttpResponse(transcription.text, content_type='application/text charset=utf-8')
