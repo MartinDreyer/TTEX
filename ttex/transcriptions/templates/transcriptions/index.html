@@ -1,16 +1,23 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<h1 class="text-4xl font-bold mb-16 mt-8">{{ title }}</h1>
-<div class="flex flex-col w-full items-center">
-  {% if transcriptions %}
-  <ul class="grid grid-cols-1 gap-y-4 max-w-xs m-8">
-    {% for transcription in transcriptions %}
-      {% include "transcriptions/components/card.html" %}
-    {% endfor %}
-  </ul>
-  {% endif %}
-  </ul>
-
-</div>
+  <h1 class="text-4xl font-bold mb-16 mt-8">{{ title }}</h1>
+  <div class="flex flex-col w-full items-center">
+    {% if transcriptions %}
+      <div class="w-full max-w-4xl border border-gray-300">
+        <!-- Table Header -->
+        <div class="bg-[#640014] text-white grid grid-cols-3 sm:grid-cols-5 border-b border-gray-300">
+          <div class="px-4 py-2 text-left font-medium">Titel</div>
+          <div class="px-4 py-2 text-left font-medium hidden sm:block">Oprettet</div>
+          <div class="px-4 py-2 text-left font-medium hidden sm:block">Bruger</div>
+          <div class="px-4 py-2 text-left font-medium">Status</div>
+          <div class="px-4 py-2 text-left font-medium">Download</div>
+        </div>
+        <!-- Table Body -->
+        {% for transcription in transcriptions %}
+          {% include 'transcriptions/components/_card.html' %}
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
 {% endblock %}

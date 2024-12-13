@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 
 MODEL_SIZE = os.environ.get("MODEL_SIZE", "small")
 DEVICE = os.environ.get("DEVICE", "cpu")
-DOWNLOAD_ROOT = os.environ.get("DOWNLOAD_ROOT")
+DOWNLOAD_ROOT = os.environ.get("DOWNLOAD_FOLDER", "ttex/models")
 
 
 @shared_task
@@ -50,23 +50,17 @@ def transcribe(file_path, username, max_line_width=42):
                text="Transskribering undervejs ..."
     )
     transcription.save()
-    print(f"Created pending transcription for user {username}")
-    print(f"Transcribing {file_path} for user {username}")
 
     # Load the Whisper model
     model = whisper.load_model(
         MODEL_SIZE, device=DEVICE, download_root=DOWNLOAD_ROOT)
 
-    print(f"Model loaded: {model}")
-
     # Extract the file name from the file path and build the full path to the audio file
     file_name = file_path.split('\\')[-1]
     audio_path = os.path.join(os.getcwd(), 'temp', 'audio', file_name)
-    print(f"Audio path: {audio_path}")
 
     # Prepare the output path for the SRT file
     srt_path = prepare_srt_path(audio_path)
-    print(f"SRT path: {srt_path}")
 
     # Perform the transcription
     try:
@@ -75,7 +69,6 @@ def transcribe(file_path, username, max_line_width=42):
     except Exception as e:
         print(f"An error occurred while transcribing the audio file: {e}")
 
-    print(f"Transcription result: {result}")
     # Write the transcription result to an SRT file
     if result and srt_path:
         write_transcription_to_srt(
