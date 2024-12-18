@@ -1,34 +1,77 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<div class="w-full text-left p-4 "> &lt; <a href="{% url 'transcriptions' %}">Tilbage </a></div>
-<div class="w-full flex justify-end">
-    <div class="flex  space-x-4 mb-8">
-        <form action="{% url 'download_transcription' transcription.id %}" method="GET">
-            {% csrf_token %}
-            <button type="submit" class="bg-[#000523] hover:bg-slate-700  text-white py-2 px-4 rounded mt-4">Hent</button>
-        </form>
-        <form action="{% url 'edit' transcription.id %}" method="GET">
-            {% csrf_token %}
-            <button type="submit" class="bg-slate-200 hover:bg-slate-300 py-2 px-4 rounded mt-4">Omdøb</button>
-        </form>
-        <form action="{% url 'delete_transcription' transcription.id %}" method="POST">
-            {% csrf_token %}
-            <button type="submit" class="bg-[#F0281E] hover:bg-[#EB8C82] text-white py-2 px-4 rounded mt-4" onclick="return confirm('Er du sikker på, du vil slette denne transskribering?')">Slet</button>
-        </form>
+  <div class="w-full text-left p-4">
+    &lt; <a href="{% url 'transcriptions' %}">Tilbage</a>
+  </div>
+  <div class="w-full flex justify-end">
+    <div class="flex space-x-4 mb-8">
+      <form action="{% url 'download_transcription' transcription.id %}" method="GET">
+        {% csrf_token %}
+        <button type="submit" class="bg-[#000523] hover:bg-slate-700 text-white py-2 px-4 rounded mt-4">Hent</button>
+      </form>
+      <form action="{% url 'delete_transcription' transcription.id %}" method="POST">
+        {% csrf_token %}
+        <button type="submit" class="bg-brand hover:bg-[#EB8C82] text-white py-2 px-4 rounded mt-4" onclick="return confirm('Er du sikker på, du vil slette denne transskribering?')">Slet</button>
+      </form>
     </div>
-</div>
-<div class="w-full flex justify-center bg-[#FFE6D7] p-2 rounded mb-10 rounded ">
-    <div>
-        <div>
-        
-            <h1 class=" mb-16 text-4xl font-bold">{{ transcription.title }}</h1>
+  </div>
+  <div class="w-full flex justify-center bg-[#FFE6D7] rounded mb-10">
+    <div class="max-w-4xl flex flex-col w-full gap-8 bg-white text-left p-8">
+      <div class="w-full flex justify-between">
+        <div class="w-full flex items-center justify-between gap-2" id="transcription_title">
+          <h1 class="text-4xl font-bold">{{ transcription.title }}</h1>
+          <div class="flex justify-center items-center cursor-pointer rounded bg-gray-100 hover:bg-gray-200 p-2" title="Omdøb" onclick="toggleRename()">
+            {% include 'transcriptions/components/_icon_edit.html' %}
+          </div>
         </div>
-        <div class="text-left bg-white p-16 rounded">
-            <p> {{ transcription.text|linebreaksbr }}</p>
+        <div class="hidden w-full justify-between gap-2" id="save_form">
+          <form method="post" id="save" class="w-full">
+            {% csrf_token %}
+            {% for field in form %}
+              {% if field.name == 'title' %}
+                <div class="w-full">{{ field }}</div>
+              {% endif %}
+            {% endfor %}
+          </form>
+          <div class="flex justify-center items-center cursor-pointer rounded bg-gray-100 hover:bg-gray-200 p-2" title="Gem" onclick="save()">
+            <input type="submit" form="save" class="" value="" id="save-button" />
+            {% include 'transcriptions/components/_icon_check.html' %}
+          </div>
+          <div class="flex justify-center items-center cursor-pointer rounded bg-gray-100 hover:bg-gray-200 p-2" title="Anuller" onclick="toggleRename()">
+            {% include 'transcriptions/components/_icon_cross.html' %}
+          </div>
         </div>
-
-        
+      </div>
+      <div class="font-mono text-2xl">
+        <p>{{ transcription.text|linebreaksbr }}</p>
+      </div>
     </div>
-</div>
+  </div>
+  <script>
+    function toggleRename() {
+      const title = document.getElementById('transcription_title')
+      const save = document.getElementById('save_form')
+    
+      if (title.classList.contains('hidden')) {
+        title.classList.remove('hidden')
+        save.classList.remove('flex')
+        save.classList.add('hidden')
+      } else if (!title.classList.contains('hidden')) {
+        title.classList.add('hidden')
+        save.classList.remove('hidden')
+        save.classList.add('flex')
+      }
+    }
+    function save() {
+      const saveButton = document.getElementById('save-button')
+      saveButton.click()
+      toggleRename()
+    }
+  </script>
+  <style>
+    #id_title {
+      width: 100%;
+    }
+  </style>
 {% endblock %}

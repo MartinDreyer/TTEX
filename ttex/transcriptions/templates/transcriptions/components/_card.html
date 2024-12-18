@@ -1,9 +1,9 @@
 <div class="even:bg-white odd:bg-gray-200 hover:bg-orange-200 grid grid-cols-3 sm:grid-cols-5 border-b border-gray-300 text-left">
   <a href="{% url 'detail' transcription.id %}" class="sm:col-span-4 grid sm:grid-cols-4 col-span-2 grid-cols-2">
-    <div class="px-4 py-2 flex items-end">{{ transcription.title }}</div>
+    <div class="px-4 py-2 flex items-end text-balance truncate">{{ transcription.title }}</div>
     <div class="px-4 py-2 items-end text-xs hidden sm:flex">{{ transcription.created_at }}</div>
     <div class="px-4 py-2 items-end hidden sm:flex">{{ transcription.user }}</div>
-    <div class="px-4 py-2 flex items-end">
+    <div class="px-4 py-2 flex items-center">
       {% if transcription.status == 'COMPLETE' %}
         {% include 'transcriptions/components/_icon_done.html' %}
       {% elif transcription.status == 'PENDING' %}
@@ -11,7 +11,7 @@
       {% endif %}
     </div>
   </a>
-  <div class="px-4 py-2 flex justify-center">
+  <div class="px-4 py-2 flex justify-center items-center">
     <a href="{{ transcription.download_url }}">{% include 'transcriptions/components/_icon_download.html' %}</a>
   </div>
 </div>

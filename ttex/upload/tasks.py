@@ -14,70 +14,80 @@ from oauthlib.oauth2 import BackendApplicationClient
 from ttex.utils import get_secret
 from requests.models import PreparedRequest  # For URL validation
 import logging
+from dotenv import load_dotenv
 logger = logging.getLogger(__name__)
+
+load_dotenv()
 
 
 MODEL_SIZE = os.environ.get("MODEL_SIZE", "small")
 DEVICE = os.environ.get("DEVICE", "cpu")
 DOWNLOAD_ROOT = os.environ.get("DOWNLOAD_FOLDER", "ttex/models")
 
-
 @shared_task
 def transcribe(file_path, username, max_line_width=42):
-    logger.info(
-        f"Starting transcription for file ID: {file_path} and user: {username}")
     """
     Transcribe an audio file to SRT format using Whisper and save the transcription.
 
     Args:
         file_path (str): The path to the audio file to transcribe.
         username (str): The username of the user who uploaded the audio file.
+        (optional) max_line_width (int): The maximum length of each line in the srt. 
 
     Returns:
         None
     """
+    # Get variables
+    user, model, file_name, audio_path, srt_path = get_variables(username=username, file_path=file_path)
 
-    # Create pending transcription instance
-    user = User.objects.get(username=username)
-    id = uuid.uuid4()
+    # Create a pending transcription
+    transcription = create_pending(file_path=file_path, user=user)
+    id = transcription.id
 
-    # Create a pending transcription instance
-    transcription = Transcription.objects.create(
-        id=id,
-        title=Path(file_path).stem,
-        user=user,
-        status="PENDING",
-               text="Transskribering undervejs ..."
-    )
-    transcription.save()
+    # Create the actual transcription
+    result = create_transcription(model=model, audio_path=audio_path)
 
-    # Load the Whisper model
-    model = whisper.load_model(
-        MODEL_SIZE, device=DEVICE, download_root=DOWNLOAD_ROOT)
+    # Create SRT and save it to transcription.
+    if result and srt_path:
+        try:
+            write_transcription_to_srt(srt_path, result, max_line_width=max_line_width)
+            save_transcription(srt_path, user, audio_path, id)
+        except Exception as e:
+            print(f"Error saving transcription {e}")
+            return
 
-    # Extract the file name from the file path and build the full path to the audio file
-    file_name = file_path.split('\\')[-1]
-    audio_path = os.path.join(os.getcwd(), 'temp', 'audio', file_name)
-
-    # Prepare the output path for the SRT file
-    srt_path = prepare_srt_path(audio_path)
-
-    # Perform the transcription
+    
+def create_transcription(model, audio_path):
     try:
         result = model.transcribe(
             f"file:{audio_path}", verbose=False, word_timestamps=True)
+        return result
     except Exception as e:
         print(f"An error occurred while transcribing the audio file: {e}")
+        return
 
-    # Write the transcription result to an SRT file
-    if result and srt_path:
-        write_transcription_to_srt(
-            srt_path, result, max_line_width=max_line_width)
+def get_variables(username, file_path):
+    user = User.objects.get(username=username)
+    model = whisper.load_model(MODEL_SIZE, device=DEVICE, download_root=DOWNLOAD_ROOT)
+    file_name = file_path.split('\\')[-1]
+    audio_path = os.path.join(os.getcwd(), 'temp', 'audio', file_name)
+    srt_path = prepare_srt_path(audio_path)
 
-        # Save the transcription to the database
-        save_transcription(srt_path, user, audio_path, id)
-        logger.info(
-            f"Completed transcription for file path: {file_path} and user: {username}")
+    return user, model, file_name, audio_path, srt_path
+
+def create_pending(file_path, user):
+    try:
+        transcription = Transcription.objects.create(
+        title=Path(file_path).stem,
+        user=user,
+        status="PENDING",
+        text="Transskribering undervejs ..."
+    )
+        transcription.save()
+        return transcription
+    except Exception as e:
+        print(f"Error creating pending transcription {e}")
+        return 
 
 
 def prepare_srt_path(audio_path):

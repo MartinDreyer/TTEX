@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <div class="flex flex-col gap-4 justify-center items-center w-full">
+    <p>Der blev ikke fundet nogen transskriberinger.</p>
+    <a class="px-4 py-2 rounded bg-brand hover:bg-[#c44248ee] max-w-sm font-bold text-white" href="{% url 'upload' %}">Upload ny transskribering</a>
+  </div>
+{% endblock %}

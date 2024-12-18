@@ -5,6 +5,9 @@ from django.core.files.storage import default_storage
 from .tasks import transcribe
 import os
 from django.urls import reverse
+from django.contrib import messages
+
+
 
 # Create your views here.
 
@@ -13,6 +16,15 @@ from django.urls import reverse
 def upload(request):
     return render(request, 'upload/upload.html', {})
 
+def _prepare_file(request):
+    try:
+        audio_file, file_path = _save_audio_file(request)
+        max_line_width = request.POST.get('format')
+        return file_path, max_line_width
+    except Exception as e:
+        print(f"Error preparing file {e}")
+        return None
+    
 
 def _save_audio_file(req):
     try:
@@ -28,23 +40,30 @@ def _save_audio_file(req):
         print(f"An error occurred while saving the audio file: {e}")
         return None, None
 
-
 @login_required(redirect_field_name='')
 def start_background_job(request):
+    file_path, max_line_width = _prepare_file(request)
     try:
-
-        if 'audio_file' not in request.FILES:
-            return redirect('upload')
-        else:
-            audio_file, file_path = _save_audio_file(request)
-            max_line_width = request.POST.get('format')
-            transcribe.delay(file_path, username=(
-                str(request.user.get_username())), max_line_width=int(max_line_width))
-            return redirect('success')
+        transcribe.delay(
+            file_path=file_path,
+            username=str(request.user.get_username()),
+            max_line_width=int(max_line_width)
+        )
+        return redirect('success')
     except Exception as e:
-        print(f"An error occurred while starting the background job: {e}")
+        print(f"An error occurred while saving the audio file: {e}")
+        return redirect('retry')
+
+ 
 
 
 @login_required(redirect_field_name='')
 def success(request):
     return render(request, 'upload/success.html', {})
+
+@login_required(redirect_field_name='')
+def retry (request):
+    return render(request, 'upload/retry.html', {})
+
+
+
