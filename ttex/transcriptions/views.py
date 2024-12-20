@@ -51,7 +51,7 @@ def all(request):
     page_obj = p.get_page(page_number)
 
     context = {
-        'title': "Mine transkriberinger",
+        'title': "Alle transkriberinger",
         'transcriptions': page_obj,
         'q': q,  # Pass the query to the template for use
         'no_results': no_results,  # Indicate if there are no results
