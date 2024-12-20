@@ -1,0 +1,33 @@
+<!-- Pagination Controls -->
+<div class="mt-6 flex flex-wrap justify-center items-center gap-2 rounded">
+  <!-- First Page -->
+  {% if transcriptions.has_previous %}
+    <a href="?page=1" class="px-4 py-2 bg-white text-gray-700 rounded hover:bg-gray-200 transition">Første</a>
+  {% else %}
+    <span class="px-4 py-2 bg-white text-gray-400 rounded cursor-not-allowed">Første</span>
+  {% endif %}
+
+  <!-- Previous Page -->
+  {% if transcriptions.has_previous %}
+    <a href="?page={{ transcriptions.previous_page_number }}" class="px-4 py-2 bg-white text-gray-700 rounded hover:bg-gray-200 transition">Forrige</a>
+  {% else %}
+    <span class="px-4 py-2 bg-white text-gray-400 rounded cursor-not-allowed">Forrige</span>
+  {% endif %}
+
+  <!-- Current Page Indicator -->
+  <span class="px-6 py-2 bg-gray-100 text-gray-800 rounded border font-semibold">Side {{ transcriptions.number }} af {{ transcriptions.paginator.num_pages }}</span>
+
+  <!-- Next Page -->
+  {% if transcriptions.has_next %}
+    <a href="?page={{ transcriptions.next_page_number }}" class="px-4 py-2 bg-white text-gray-700 rounded hover:bg-gray-200 transition">Næste</a>
+  {% else %}
+    <span class="px-4 py-2 bg-white text-gray-400 rounded cursor-not-allowed">Næste</span>
+  {% endif %}
+
+  <!-- Last Page -->
+  {% if transcriptions.has_next %}
+    <a href="?page={{ transcriptions.paginator.num_pages }}" class="px-4 py-2 bg-white text-gray-700 rounded hover:bg-gray-200 transition">Sidste</a>
+  {% else %}
+    <span class="px-4 py-2 bg-white text-gray-400 rounded cursor-not-allowed">Sidste</span>
+  {% endif %}
+</div>
