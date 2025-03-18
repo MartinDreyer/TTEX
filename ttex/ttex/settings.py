@@ -213,7 +213,10 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-NPM_BIN_PATH = '/home/administrator/.nvm/versions/node/v20.13.0/bin/npm'
+if os.environ.get('DJANGO_ENV') == 'production':
+    NPM_BIN_PATH = '/home/administrator/.nvm/versions/node/v20.13.0/bin/npm'
+else:
+    NPM_BIN_PATH = '/home/madr/.nvm/versions/node/v23.4.0/bin/npm'
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
